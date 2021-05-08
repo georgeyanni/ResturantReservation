@@ -1,0 +1,85 @@
+﻿@model Reservation.Dtos.ReservationDto
+
+@using System.Globalization
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer localizer
+
+
+@{
+    ViewData["Title"] = "Index";
+    List<SelectListItem> list = ViewBag.foodList;
+
+
+    if (ViewBag.CreatedSuccessfully == true)
+    {
+        if (CultureInfo.CurrentCulture.Name.StartsWith("en"))
+        {
+            <script>
+
+                alert('The Reservation is Created Successfully');
+
+            </script>
+        }
+        else
+        {
+            <script>
+
+                alert('لقد تم انشاء الحجز بنجاح');
+
+            </script>
+            }
+        }
+    }
+
+
+    <hr />
+    <div class="row">
+        <div class="col-md-4">
+            <form asp-action="Create" method="post">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="form-group">
+                    <label asp-for="ReservationDate" class="control-label"></label>
+                    <input asp-for="ReservationDate" class="form-control" />
+                    <span asp-validation-for="ReservationDate" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="TableNo" class="control-label"></label>
+                    <input asp-for="TableNo" class="form-control" />
+                    <span asp-validation-for="TableNo" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="PepoleNumber" class="control-label"></label>
+                    <input asp-for="PepoleNumber" class="form-control" />
+                    <span asp-validation-for="PepoleNumber" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="FoodTypeId" class="control-label"></label>
+                    <select class="js-example-basic-single form-control" name="FoodTypeId" id="ddfood">
+
+                        @for (int i = 0; i < list.Count; i++)
+                        {
+
+                            <option value="@list[i].Value">@list[i].Text</option>
+                        }
+
+                    </select>
+                    <span asp-validation-for="FoodTypeId" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Notes" class="control-label"></label>
+                    <textarea asp-for="Notes" class="form-control"></textarea>
+                    <span asp-validation-for="Notes" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <input type="submit" value="@localizer["Create"]" class="btn btn-primary" />
+                </div>
+            </form>
+        </div>
+    </div>
+
+
+
+    @section Scripts {
+        @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    }

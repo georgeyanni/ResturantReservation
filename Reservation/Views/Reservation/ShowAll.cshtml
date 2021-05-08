@@ -1,0 +1,118 @@
+﻿@model IEnumerable<Reservation.Dtos.ReservationDto>
+
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer localizer
+
+@{
+    ViewData["Title"] = "ShowAll";
+}
+
+
+<link href="https://cdn.datatables.net/1.10.24/css/jquery.dataTables.min.css" rel="stylesheet" />
+<link href="https://cdn.datatables.net/responsive/2.1.1/css/responsive.bootstrap.min.css" rel="stylesheet" />
+
+<script src="~/lib/bootstrap/dist/js/jquery-3.2.1.min.js"></script>
+
+<script src="~/lib/bootstrap/dist/js/jquery.dataTables.min.js"></script>
+<script src="~/lib/bootstrap/dist/js/dataTables.bootstrap4.min.js"></script>
+
+
+
+<h1>@localizer["ShowAllReservations"]</h1>
+
+<p>
+    <a asp-action="Index">@localizer["CreateNew"]</a>
+</p>
+<table class="table table-striped table-bordered" id="reservationTable">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Id)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ReservationDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.TableNo)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PepoleNumber)
+            </th>
+
+            <th>
+                @Html.DisplayNameFor(model => model.FoodType)
+            </th>
+
+            <th>
+                @Html.DisplayNameFor(model => model.Notes)
+            </th>
+
+            <th>
+                @Html.DisplayNameFor(model => model.Name)
+            </th>
+        </tr>
+    </thead>
+
+</table>
+
+@section Scripts
+    {
+
+    <script type="text/javascript" charset="utf8">
+
+
+        $(document).ready(function () {
+            // loadReservationData();
+
+            $(function () {
+
+                $.ajax({
+                    url: '/Reservation/LoadReservationData',
+                    method: 'Post',
+                    datatype: 'json',
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: OnSuccess,
+                    failure: function (response) {
+                        alert(response.d);
+                    },
+                    error: function (response) {
+                        alert(response.d);
+                    }
+
+
+                });
+
+            });
+
+            function OnSuccess(response) {
+                $.noConflict();
+
+                $("#reservationTable").DataTable(
+                    {
+
+                        bLengthChange: true,
+                        lengthMenu: [[25, 50, 100, -1], [25, 50, 100, "All"]],
+                        bFilter: true,
+                        bSort: true,
+                        bPaginate: true,
+                        data: $.parseJSON(response),
+                        columns: [
+
+                            { 'data': 'Id' },
+                            { 'data': 'ReservationDate', 'name': 'ReservationDate', 'autoWidth': true },
+                            { 'data': 'TableNo', 'name': 'TableNo', 'autoWidth': true },
+                            { 'data': 'PepoleNumber', 'name': 'PepoleNumber', 'autoWidth': true },
+                            { 'data': 'FoodType', 'name': 'FoodType', 'autoWidth': true },
+                            { 'data': 'Notes', 'name': 'Notes', 'autoWidth': true },
+                            { 'data': 'Name', 'name': 'Name', 'autoWidth': true }
+                        ],
+                    });
+            };
+
+
+
+        });
+
+    </script>
+}
